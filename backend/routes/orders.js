@@ -5,7 +5,7 @@ const Restaurant = require('../database/schemas/Restaurant');
 
 const router = Router();
 
-router.post('/orders/makeOrder', async (req, res) => {
+router.post('/orders/makeOrder', async (req, res) => { //сохдать запрос и привзяать по id к пользователю
   try {
     const { items, userId } = req.body;
     if (!userId || !items.length) {
@@ -28,7 +28,7 @@ router.post('/orders/makeOrder', async (req, res) => {
   }
 });
 
-router.get('/orders/:userId', async (req, res) => {
+router.get('/orders/:userId', async (req, res) => { //посмотреть заказы пользователя
   try {
     const { userId } = req.params;
     if (!userId) {
@@ -41,7 +41,7 @@ router.get('/orders/:userId', async (req, res) => {
   }
 });
 
-router.get('/orders/order/:orderId', async (req, res) => {
+router.get('/orders/order/:orderId', async (req, res) => { //сам заказ
   try {
     const { orderId } = req.params;
     if (!orderId) {

@@ -5,7 +5,7 @@ const Review = require('../database/schemas/Review');
 
 const router = Router();
 
-router.get('/user/getUser/:userId', async (req, res) => {
+router.get('/user/getUser/:userId', async (req, res) => { //получить данные пользователя по его id
    try {
     const {userId} = req.params;
 
@@ -23,7 +23,7 @@ router.get('/user/getUser/:userId', async (req, res) => {
    }
 });
 
-router.post('/user/newReview/:resId', async (req, res) => {
+router.post('/user/newReview/:resId', async (req, res) => { //записать новый отзыв об ресторане
   try {
     const { resId } = req.params;
     const { userId, opinion, rate } = req.body;

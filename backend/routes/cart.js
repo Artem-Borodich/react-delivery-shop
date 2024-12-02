@@ -4,7 +4,7 @@ const Product = require('../database/schemas/Product');
 
 const router = Router();
 
-router.post('/cart/addToCart', async (req, res) => {
+router.post('/cart/addToCart', async (req, res) => { // добавить товар в корзину
   try {
     const { userId, productId } = req.body;
     if (!userId || !productId) {
@@ -30,7 +30,7 @@ router.post('/cart/addToCart', async (req, res) => {
   }
 });
 
-router.get('/cart/:userId', async (req, res) => {
+router.get('/cart/:userId', async (req, res) => { // корзина пользователя
   try {
     const { userId } = req.params;
 
@@ -45,7 +45,7 @@ router.get('/cart/:userId', async (req, res) => {
   }
 });
 
-router.post('/cart/removeFromCart', async (req, res) => {
+router.post('/cart/removeFromCart', async (req, res) => { //
   try {
     const { userId, productId } = req.body;
 
@@ -71,7 +71,7 @@ router.post('/cart/removeFromCart', async (req, res) => {
   }
 });
 
-router.post('/cart/clearCart', async (req, res) => {
+router.post('/cart/clearCart', async (req, res) => { //очистить корзину
   try {
     const { userId } = req.body;
 

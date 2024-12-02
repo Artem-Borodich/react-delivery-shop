@@ -41,7 +41,7 @@ const upload = multer({ storage: storage });
 // });
 
 
-router.post('/restaurantsMenu', async (req, res) => {
+router.post('/restaurantsMenu', async (req, res) => { //добавить товар в меню
   try {
     const { resId, menuItems } = req.body;
 
@@ -69,7 +69,7 @@ router.post('/restaurantsMenu', async (req, res) => {
   }
 });
 
-router.post('/restaurants', async (req, res) => {
+router.post('/restaurants', async (req, res) => { //создать новый ресторан
   const { name, address, description, ownerId, image } = req.body;
   const user = await User.findById(ownerId);
   const resDB = await Restaurant.findOne({ name: name });
@@ -90,7 +90,7 @@ router.post('/restaurants', async (req, res) => {
   res.send(201);
 });
 
-router.get('/restaurantsMenu/:resId', async (req, res) => {
+router.get('/restaurantsMenu/:resId', async (req, res) => { //вывести меню ресторна
   try {
     const { resId } = req.params;
     const products = await Product.find({ restaurantId: resId });
@@ -104,7 +104,7 @@ router.get('/restaurantsMenu/:resId', async (req, res) => {
   }
 });
 
-router.get('/restaurant/:resId', async (req, res) => {
+router.get('/restaurant/:resId', async (req, res) => { //вывести страницу ресторна
   try {
     const { resId } = req.params;
     console.log(`Fetching restaurant with ID: ${resId}`);
@@ -122,7 +122,7 @@ router.get('/restaurant/:resId', async (req, res) => {
   }
 });
 
-router.get('/restaurants', async (req, res) => {
+router.get('/restaurants', async (req, res) => { // вывести все ретсораны
   try {
     const restaurants = await Restaurant.find();
     res.json(restaurants);
@@ -132,7 +132,7 @@ router.get('/restaurants', async (req, res) => {
   }
 });
 
-router.get('/restaurants/:ownerId', async (req, res) => {
+router.get('/restaurants/:ownerId', async (req, res) => { //список ресторанов у владельца
   try {
     const { ownerId } = req.params;
     const restaurants = await Restaurant.find({ ownerId: ownerId });
@@ -147,7 +147,7 @@ router.get('/restaurants/:ownerId', async (req, res) => {
 });
 
 
-router.get('/restaurant/getReviews/:resId', async (req, res) => {
+router.get('/restaurant/getReviews/:resId', async (req, res) => { // отзывы ресторана
   try {
     const { resId } = req.params;
     const restaurant = await Restaurant.findOne({ _id: resId });

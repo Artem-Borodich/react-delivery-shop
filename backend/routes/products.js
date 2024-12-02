@@ -3,7 +3,7 @@ const Product = require('../database/schemas/Product');
 
 const router = Router();
 
-router.get('/products/:productId', async (req, res) => {
+router.get('/products/:productId', async (req, res) => { //продукт
   try {
     const { productId } = req.params;
 
@@ -20,7 +20,7 @@ router.get('/products/:productId', async (req, res) => {
   }
 });
 
-router.post('/products/edit/:productId', async (req, res) => {
+router.post('/products/edit/:productId', async (req, res) => { //редактировать продукт
   try {
     const { productId } = req.params;
     const updateData = req.body;
