@@ -29,7 +29,39 @@ const verifyTokenForLogin = (req, res, next) => {
   }
   next();
 };
-//api запрос по пути регистр сервер работает на хосте создание пользователя 
+
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     summary: Регистрация нового пользователя
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "test@example.com"
+ *               name:
+ *                 type: string
+ *                 example: "John Doe"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *               role:
+ *                 type: string
+ *                 example: "user"
+ *     responses:
+ *       201:
+ *         description: Пользователь успешно зарегистрирован
+ *       400:
+ *         description: Ошибка валидации или пользователь уже существует
+ */
 router.post('/register', [
   body('email').isEmail().withMessage('Email is invalid'),
   body('name').notEmpty().withMessage('Name is required'),
@@ -53,11 +85,44 @@ router.post('/register', [
     res.sendStatus(201);
   }
 });
-//login
+
+/**
+ * @swagger
+ * /login:
+ *   post:
+ *     summary: Авторизация пользователя
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "test@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "password123"
+ *     responses:
+ *       200:
+ *         description: Успешная авторизация
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       401:
+ *         description: Неверный логин или пароль
+ */
 router.post('/login', [
   body('email').isEmail().withMessage('Email is invalid'),
   body('password').notEmpty().withMessage('Password is required'),
-  body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long')
+  body('password').isLength({ min: 3 }).withMessage('Password must be at least 3 characters long'),
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -69,7 +134,7 @@ router.post('/login', [
   if (!userDB) return res.status(401).send('User does not exist');
   const isValid = comparePassword(password, userDB.password);
 
-  if (isValid) {//новая сессия 
+  if (isValid) {
     console.log('success');
     req.session.user = userDB;
     const token = jwt.sign({ userId: req.session.user._id }, secret, {
@@ -81,16 +146,55 @@ router.post('/login', [
     return res.status(401).send('Password is incorrect');
   }
 });
-//log out
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Выход из системы
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Успешный выход
+ */
 router.post('/logout', verifyTokenForLogin, (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
-//проверка авторизации
+
+/**
+ * @swagger
+ * /checkAuth:
+ *   get:
+ *     summary: Проверка авторизации пользователя
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Пользователь авторизован
+ *       401:
+ *         description: Неавторизованный доступ
+ */
 router.get('/checkAuth', verifyTokenForLogin, (req, res) => {
   console.log('auth check');
   res.status(200).json({ authenticated: true });
 });
-//понять какой сейчас юзер
+
+/**
+ * @swagger
+ * /currentUser:
+ *   get:
+ *     summary: Получить информацию о текущем пользователе
+ *     tags:
+ *       - Auth
+ *     responses:
+ *       200:
+ *         description: Информация о текущем пользователе
+ *       401:
+ *         description: Пользователь не авторизован
+ *       404:
+ *         description: Пользователь не найден
+ */
 router.get('/currentUser', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
