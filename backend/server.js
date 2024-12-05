@@ -13,6 +13,9 @@ const productRoute = require('./routes/products.js');
 const userRoute = require('./routes/user.js');
 const cors = require('cors');
 
+const morgan = require('morgan'); // Подключаем morgan
+const logger = require('./utils/logger.js'); // Подключаем ваш кастомный логгер
+
 // Swagger for http://localhost:5000/api-docs
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocs = require('./swagger'); // Импорт конфигурации Swagger
@@ -49,3 +52,12 @@ app.use(productRoute);
 app.use(userRoute);
 
 app.listen(PORT, () => console.log(`listening on port ${PORT}`));
+
+// Логирование HTTP-запросов через morgan
+app.use(
+  morgan('combined', {
+    stream: {
+      write: (message) => logger.info(message.trim()), // Логи записываются через ваш logger.js
+    },
+  }),
+);
